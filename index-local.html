@@ -1,6 +1,112 @@
-let lo = new Aloader();
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>简易火车票查询</title>
 
-// const transferor_url = 'http:\/\/127.0.0.1/transferor/transferor.php';
+	<!--
+	<script type="text/javascript" src="../react/v15.5.0/react.min.js"></script>
+	<script type="text/javascript" src="../react/v15.5.0/react-dom.min.js"></script>
+	<script type="text/javascript" src="../babel-standalone/v6.24.0/babel.min.js"></script>
+	-->
+	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+	<script src="https://unpkg.com/react@15/dist/react.js"></script>
+	<script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+
+	<style type="text/css">
+		div{
+			/*border: 1px solid black;*/
+		}
+
+		ul.station-list{
+			margin: 0 3em;
+			position: absolute;
+			max-height: 10em;
+			overflow-x: none;
+			overflow-y: scroll;
+			background-color: white;
+			border: 1px solid black;
+			list-style-type: none;
+			padding-left: 0.5em;
+		}
+
+		ul.station-list>li.choice{
+			cursor: pointer;
+		}
+		
+		ul.station-list>li.choice:hover{
+			background-color: #ddd;
+		}
+
+
+		.search-style{
+			width: 80%;
+			display: inline-flex;
+			flex-direction: row;
+			align-items: flex-start;
+			justify-content: space-around;
+		}
+		.search-component{
+		}
+
+		table.search_result{
+			margin-top: 20px;
+			width: 100%;
+			border-left: 1px solid #ddd;
+			border-top: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+		}
+		table.search_result th, table.search_result td{
+			border-right: 1px solid #ddd;
+			text-align: right;
+		}
+		table.search_result tr:nth-child(even), table.search_result thead>tr{
+			background-color: #eee;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h2>简易火车票查询</h2>
+	</header>
+	<main>
+		<section class="search-section">
+			<!-- <section class="search-box">
+				<label>
+					出发：
+					<input class="search-train-from" type="text" />
+				</label>
+				<label>
+					到达：
+					<input class="search-train-to" type="text" />
+				</label>
+			</section>
+			<section class="search-result">
+				<ul>
+					<li>
+						<section class="search-result-item">
+							<div>车次</div>
+							G1
+						</section>
+					</li>
+					<li>
+						<section class="search-result-item">
+							<div>车次</div>
+							G2
+						</section>
+					</li>
+				</ul>
+			</section> -->
+		</section>
+		<section class="search-result-section">
+			
+		</section>
+	</main>
+	<footer>
+		
+	</footer>
+	<script type="text/babel">
+
 const transferor_url = 'http:\/\/115.159.213.127/transferor/transferor.php';
 
 const station_names_ver = '1.8902';
@@ -9,8 +115,6 @@ const station_names_url = `https:\/\/kyfw.12306.cn/otn/resources/js/framework/st
 station_version=${station_names_ver}`;
 
 const ticket_left_url = (date, from_station_code, to_station_code, adult_or_stu)=>
-// date: YYYY-MM-DD
-// adult_or_stu: 'ADULT' or '0X00'(?)
 `https:\/\/kyfw.12306.cn/otn/leftTicket/query?\
 leftTicketDTO.train_date=${date}&\
 leftTicketDTO.from_station=${from_station_code}&\
@@ -113,77 +217,36 @@ function get_train_price(train_no, from_order, to_order, seat_types, date){
 }
 
 function parse_train_result(str){
-	// example
-	// decoded
-	// 2WkQS0wD3fbyjQBfmBwrTzEgINTdswO9D52rdXWHwQFvSKMONs31N7+ELZ9JU8OGMdJYJg4KShdVFoTHBVm+isjaEUSxRB/1MPKiiQA2/0LIFXMC6K6+LPus7HAJ+8llr1oeTIcJILpOETKRZofAKI22hhzP5wjRhJYAgEppKPlHU+1B1apTFi+Ch7cax8/nVk+GaeHvMuAMyo8XrbrBoTUFEPysH27b9hxb7MFmiVkF3aEL|预订|240000G1010C|G101|VNP|AOH|VNP|AOH|06:44|12:38|05:54|Y|7ghoA/PKKLO0Jj1JoG4owYAyEgbWaF9SKqqpi8fAOxJdeN+z|20170518|3|P2|01|11|1|0|||||||||||有|有|有|O0M090|OM9
-	// or
-	// |23:00-06:00系统维护时间|240000G1010C|G101|VNP|AOH|VNP|AOH|06:44|12:38|05:54|IS_TIME_NOT_BUY|fPyHx8KCpWqt7wgbm0dDZZPBWuiitFjZhV2W7XWnHLscYzmY|20170518|3|P2|01|11|1|0|||||||||||有|有|有|O0M090|OM9
-	// 用 '|' 隔开了35项
-	
-	// split
-	// (0) ["2WkQS0wD3fbyjQBfmBwrTzEgINTdswO9D52rdXWHwQFvSKMONs…nVk+GaeHvMuAMyo8XrbrBoTUFEPysH27b9hxb7MFmiVkF3aEL", 
-	// (1-7) "预订", "240000G1010C", "G101", "VNP", "AOH", "VNP", "AOH",
-	// (8-12) "06:44", "12:38", "05:54", "Y", "7ghoA/PKKLO0Jj1JoG4owYAyEgbWaF9SKqqpi8fAOxJdeN+z",
-	// (13-19) "20170518", "3", "P2", "01", "11", "1", "0",
-	// (20-34) "", "", "", "", "", "", "", "", "", "", "有", "有", "有", "O0M090", "OM9"]
-
-	// 参考了 https://github.com/jokermonn/-Api/blob/master/12306.md
-	// 但是似乎接口又变了
 
 	const splited = decodeURIComponent(str).split('|');
 	const result = {
-		// 是否可预定： 预订 | 23:00-06:00系统维护时间
-		// 或者是备注？
 		'bookable': splited[1],
-		// 订票用车次
 		'train_no': splited[2],
-		// 车次
 		'train_code': splited[3],
-		// 始发站，code
 		'originating_station': splited[4],
-		// 终点站，code
 		'terminal': splited[5],
-		// 出发站，code
 		'from': splited[6],
-		// 到达站，code
 		'to': splited[7],
-		// 出发时间，'hh:mm'
 		'from_time': splited[8],
-		// 到达时间，'hh:mm'
 		'to_time': splited[9],
-		// 历时，'hh:mm'
 		'lasted': splited[10],
-		// 是否可以购买： Y | N | IS_TIME_NOT_BUY
 		'buyable': splited[11],
 
-		// 列车出发日期， YYYYMMDD
 		'train_start_day': splited[13],
 
-		// 出发和到达站序
-		// 线路中该站的序号
 		'from_order': splited[16],
 		'to_order': splited[17],
 
-		// 高软
 		'gaoruan': splited[21],
-		// 软卧
 		'ruanwo': splited[23],
-		// 特等座
 		'tedeng': splited[25],
-		// 无座
 		'wuzuo': splited[26],
-		// 硬卧
 		'yingwo': splited[28],
-		// 硬座
 		'yingzuo': splited[29],
-		// 二等座
 		'erdengzuo': splited[30],
-		// 一等座
 		'yidengzuo': splited[31],
-		// 商务座
 		'shangwuzuo': splited[32],
 
-		// 也许是该车含有的座位类型
 		'seat_types': splited[34],
 	};
 	return result;
@@ -239,12 +302,6 @@ function parse_station_names(str){
 	.split('@')
 	.map(station_name_str=>{
 		const staion_name_parts = station_name_str.split('|');
-		// station_name_str example
-		// 'bjb|北京北|VAP|beijingbei|bjb|0'
-		// 'bji|北京|BJP|beijing|bj|2'
-		// split ->
-		// 0                |1      |2   |3          |4                       |5
-		// name_pinyin_short|name_zh|code|name_pinyin|name_pinyin_first_letter|order
 		const station_name = {
 			'name_zh': staion_name_parts[1],
 			'code': staion_name_parts[2],
@@ -258,8 +315,6 @@ function parse_station_names(str){
 }
 
 function find_stations(str, opt){
-	// opt = undefined | 'code' | 'name_zh'
-
 	if(str === ''){
 		return null;
 	}
@@ -285,8 +340,6 @@ function find_stations(str, opt){
 }
 
 function formatted_date(timestamp){
-	// timestamp in millisecond
-	// to YYYY-MM-DD
 	const t = new Date(timestamp);
 	let m = t.getMonth()+1;
 	if(m < 10){
@@ -301,7 +354,6 @@ function formatted_date(timestamp){
 
 function search_train(date, from_station_code, to_station_code, adult_or_stu){
 	const url = ticket_left_url(date, from_station_code, to_station_code, adult_or_stu);
-	// console.log('search', Array.from(arguments));
 	
 	ReactDOM.render(
 		<SearchResult url={url}/>,
@@ -411,11 +463,9 @@ class SelectStationList extends React.Component{
 	constructor(props) {
 		super(props);
 		this.selected_station = null;
-		// console.log(props);
 	}
 	select_station(station){
 		this.selected_station =  station;
-		// console.log('setstate');
 	}
 	render(){
 		return <ul className="station-list" onClick={this.props.onClick}>
@@ -437,23 +487,17 @@ class SearchArea extends React.Component{
 	constructor(props) {
 		super(props);
 		this.state = {
-			// input失焦时下拉选项消失计时器
 			'blur_timeout': null,
-			// 目前聚焦的input
 			'focused-input': '',
-			// 上次输入的input
 			'inputing': '',
-			// input显示的值，中文
 			'train-from': '',
 			'train-to': '',
-			// 选择的火车站，对象引用
 			'selected-from': null,
 			'selected-to': null,
 		}
 	}
 
 	search_search_text_change(ev){
-		// input有输入时fire
 		const input_text = ev.target.value;
 		const input_name = ev.target.name;
 
@@ -474,10 +518,6 @@ class SearchArea extends React.Component{
 	}
 
 	input_focus_handler(stat, ev){
-		// input得到焦点时有下拉选项，失焦时关闭下拉选项
-
-		// stat = 'focus'| 'blur'
-
 		const which = ev.target.name;
 		if(stat === 'blur'){
 			const blur_timeout = window.setTimeout(()=>{
@@ -499,8 +539,6 @@ class SearchArea extends React.Component{
 	}
 
 	select_station(station){
-		// 根据选择的车站在input上显示其中文名
-		// console.log('click', station);
 		if(this.state.inputing === 'train-from'){
 			this.setState({
 				'selected-from': station,
@@ -515,25 +553,15 @@ class SearchArea extends React.Component{
 		}
 	}
 
-	// date_change(ev){
-	// 	this.setState({
-	// 		date: formatted_date(ev.target.valueAsNumber), 
-	// 	});
-	// 	console.log(this.state);
-	// }
-
 	select_from_list(){
 		this.select_station(this.select_station_list.selected_station);
 	}
 
 	submit_search(){
-		// console.log(this);
 		let station_from_code;
-		// 检查车站
 		if(this.state['select-from']){
 			station_from_code = this.state['select-from'].code;
 		}else{
-			// 未在列表上选择车站但是有完整中文名
 			if(this.state['train-from']){
 				const station_from = find_stations(this.state['train-from'], 'name_zh');
 				if(station_from){
@@ -572,16 +600,12 @@ class SearchArea extends React.Component{
 			}
 		}
 
-		// 检查日期
 		const d = new Date(this.input_date.value).getTime();
 		const dmin = new Date(this.input_date.min).getTime();
 		if(d < dmin){
 			alert('日期不合法');
 			return;
 		}
-
-		// alert(station_from_code + ' to ' + station_to_code + ' at '
-		// 	+ this.input_date.value + ', ' + (this.check_stu.checked?'student':'adult'));
 
 		search_train(
 			this.input_date.value,
@@ -594,9 +618,7 @@ class SearchArea extends React.Component{
 	change_day(dir, ev){
 		const t = new Date(this.input_date.value).getTime();
 		if(dir === -1){
-			// 前一天
 			if(t <= new Date(this.input_date.min).getTime()){
-				// console.log('不能再前');
 				return;
 			}else{
 				
@@ -605,7 +627,6 @@ class SearchArea extends React.Component{
 			}
 		}
 		if(dir === 1){
-			// 后一天
 			if(t >= new Date(this.input_date.max).getTime()){
 				return;
 			}else{
@@ -690,10 +711,7 @@ class SearchArea extends React.Component{
 				<label>
 					日期：
 					<input type="date" min={formatted_date(Date.now())}
-						max={formatted_date(Date.now()+60*24*3600*1000) /* 限制60天 
-						value={formatted_date(Date.now())}
-						onChange={(ev)=>console.dir(ev.target)}
-						*/}
+						max={formatted_date(Date.now()+60*24*3600*1000) }
 						ref={input=>{
 							if(!this.input_date){
 								/* console.dir(input); */
@@ -785,17 +803,10 @@ class SearchSection extends React.Component{
 	constructor(props){
 		super(props);
 
-		// state.ready 
-		// 0: loading
-		// 1: done
-		// -1: error
 		this.state = {'ready': 0};
-		// this.state = {'ready': 1};
-		// return;
 
 		poster(transferor_url, {}, `url=${encodeURIComponent(station_names_url)}`)
 		.then(val=>{
-			// console.log(val);
 			station_names = parse_station_names(val);
 			if(station_names === -1){
 				throw new Error('parse station name error');
@@ -818,9 +829,6 @@ class SearchSection extends React.Component{
 		}
 
 		if(this.state.ready === 1){
-			// return <div>
-			// 	{station_names.map((val, i)=><div>{`${i}.${val.name_zh}`}</div>)}
-			// </div>;
 			return <div>
 				<SearchArea />
 			</div>
@@ -839,3 +847,7 @@ ReactDOM.render(
 	<SearchSection />,
 	document.getElementsByClassName('search-section')[0]
 );
+
+	</script>
+</body>
+</html>
