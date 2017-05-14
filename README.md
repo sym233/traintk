@@ -2,7 +2,7 @@
 
 ~~sym233.github.io/traintk/~~
 
-由于我没有域名和ssl，所以请下载 index-local.html 到本地打开
+http://115.159.213.127/traintk/index.html
 
 使用react
 
