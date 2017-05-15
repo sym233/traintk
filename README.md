@@ -2,9 +2,7 @@
 
 ~~sym233.github.io/traintk/~~
 
-由于我没有域名和ssl， 不能从https给http发xhr，所以没法用github page
-
-http://115.159.213.127/traintk/index.html
+由于我没有域名和ssl，所以请下载 index-local.html 到本地打开
 
 使用react
 
@@ -15,3 +13,6 @@ http://115.159.213.127/traintk/index.html
 // 查询列车线路
 // 跳转到12306购买
 ```
+
+
+话说刚才cdn给了另一个版本的babel-standalone，突然就不工作了，也没提示，orz

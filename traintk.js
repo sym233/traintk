@@ -1,4 +1,3 @@
-let lo = new Aloader();
 
 // const transferor_url = 'http:\/\/127.0.0.1/transferor/transferor.php';
 const transferor_url = 'http:\/\/115.159.213.127/transferor/transferor.php';
@@ -814,7 +813,7 @@ class SearchSection extends React.Component{
 	}
 	render(){
 		if(this.state.ready === 0){
-			return <p>now loading station info...</p>;
+			return <p>正在加载车站信息</p>;
 		}
 
 		if(this.state.ready === 1){
