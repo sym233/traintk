@@ -2,6 +2,11 @@ div{
 	/*border: 1px solid black;*/
 }
 
+header{
+	display: flex;
+	justify-content: center;
+}
+
 ul.station-list{
 	margin: 0 3em;
 	position: absolute;
@@ -30,7 +35,14 @@ ul.station-list>li.choice:hover{
 	align-items: flex-start;
 	justify-content: space-around;
 }
-.search-component{
+.search-component.search-date .date-component-container{
+	display: flex;
+	flex-direction: row;
+}
+.search-component.search-date .date-component-container .change-day-btn{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
 
 table.search_result{
