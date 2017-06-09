@@ -1,61 +1,81 @@
 div{
-	/*border: 1px solid black;*/
+    /*border: 1px solid black;*/
 }
 
 header{
-	display: flex;
-	justify-content: center;
+    display: flex;
+    justify-content: center;
+}
+
+.notdisp{
+    display: none;
 }
 
 ul.station-list{
-	margin: 0 3em;
-	position: absolute;
-	max-height: 10em;
-	overflow-x: none;
-	overflow-y: scroll;
-	background-color: white;
-	border: 1px solid black;
-	list-style-type: none;
-	padding-left: 0.5em;
+    margin: 0 3em;
+    position: absolute;
+    max-height: 10em;
+    overflow-x: none;
+    overflow-y: scroll;
+    background-color: white;
+    border: 1px solid black;
+    list-style-type: none;
+    padding-left: 0.5em;
 }
 
 ul.station-list>li.choice{
-	cursor: pointer;
+    cursor: pointer;
 }
 
 ul.station-list>li.choice:hover{
-	background-color: #ddd;
+    background-color: #ddd;
 }
 
 
 .search-style{
-	width: 80%;
-	display: inline-flex;
-	flex-direction: row;
-	align-items: flex-start;
-	justify-content: space-around;
+    width: 80%;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
 }
 .search-component.search-date .date-component-container{
-	display: flex;
-	flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 .search-component.search-date .date-component-container .change-day-btn{
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 table.search_result{
-	margin-top: 20px;
-	width: 100%;
-	border-left: 1px solid #ddd;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
+    margin-top: 20px;
+    width: 100%;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
-table.search_result th, table.search_result td{
-	border-right: 1px solid #ddd;
-	text-align: right;
+table.search_result>thead{
+    position: sticky;
+    top: 10px;
 }
-table.search_result tr:nth-child(even), table.search_result thead>tr{
-	background-color: #eee;
+table.search_result>thead>th, table.search_result>tbody>td{
+    border-right: 1px solid #ddd;
+    text-align: right;
+}
+table.search_result>tbody>tr:nth-child(even), table.search_result>thead>tr{
+    background-color: #eee;
+}
+
+.train-detail-box{
+    position: absolute;
+    border: 1px solid black;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+.train-detail-table tr{
+    border-top: 1px solid #bbb;
+}
+.train-detail-table .grey{
+    color: #888;
 }

@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import urls from './urls.js';
 import poster from './poster.js';
 
-import get_train_price from './get-train-price.js';
+import ResultTr from './result-table.js';
+
 
 function parse_train_result(str){
   // example
@@ -116,99 +117,10 @@ function parse_train_search(str){
 function search_result_table(res){
   return <table className="search_result">
     <caption>搜索结果</caption>
-    <thead>
-      <tr>
-        <th>车次</th>
-        <th>查询</th>
-        <th>
-          <div>出发</div>
-          <div>到达</div>
-        </th>
-        <th>
-          <div>出发时间</div>
-          <div>到达时间</div>
-        </th>
-        <th>历时</th>
-        <th>商务座</th>
-        <th>特等座</th>
-        <th>一等座</th>
-        <th>二等座</th>
-        <th>
-          高级<br />
-          软卧
-        </th>
-        <th>软卧</th>
-        <th>硬卧</th>
-        <th>软座</th>
-        <th>硬座</th>
-        <th>无座</th>
-        <th>预订</th>
-      </tr>
-    </thead>
+    <ResultTr is-head={true} />
     <tbody>
       {res.trains.map(train=>(
-        <tr key={train.train_no} id={train.train_no}>
-          <td>{train.train_code}</td>
-          <td>
-            <button onClick={get_train_price.bind(this, 
-              train.train_no, train.from_order, train.to_order,
-              train.seat_types, train.train_start_day)
-            }>查询价格</button>
-          </td>
-          <td>
-            <div>{res.map[train.from]}</div>
-            <div>{res.map[train.to]}</div>
-          </td>
-          <td>
-            <div>{train.from_time}</div>
-            <div>{train.to_time}</div>
-          </td>
-          <td>{train.lasted}</td>
-          <td className="shangwuzuo">
-            <div>{train.shangwuzuo}</div>
-            <div className='price'></div>
-          </td>
-          <td className="tedengzuo">
-            <div>{train.tedengzuo}</div>
-            <div className='price'></div>
-          </td>
-          <td className="yidengzuo">
-            <div>{train.yidengzuo}</div>
-            <div className='price'></div>
-          </td>
-          <td className="erdengzuo">
-            <div>{train.erdengzuo}</div>
-            <div className='price'></div>
-          </td>
-          <td className="gaoruan">
-            <div>{train.gaoruan}</div>
-            <div className='price'></div>
-          </td>
-          <td className="ruanwo">
-            <div>{train.ruanwo}</div>
-            <div className='price'></div>
-          </td>
-          <td className="yingwo">
-            <div>{train.yingwo}</div>
-            <div className='price'></div></td>
-          <td></td>
-          <td className="yingzuo">
-            <div>{train.yingzuo}</div>
-            <div className='price'></div>
-          </td>
-          <td className="wuzuo">
-            <div>{train.wuzuo}</div>
-            <div className='price'></div>
-          </td>
-          <td>{
-            train.buyable === 'Y'?
-              <button>{train.bookable}</button>:
-              (train.bookable === '预订'?
-                <div>不可预订</div>:
-                <div>{train.bookable}</div>
-              )
-          }</td>
-        </tr>
+        <ResultTr key={train.train_no} res-map={res.map} train={train} />
       ))}
     </tbody>
   </table>;
